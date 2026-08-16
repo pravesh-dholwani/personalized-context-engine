@@ -1,0 +1,41 @@
+services:
+  user-service:
+    build: .
+    command: uvicorn mocks.user_service.main:app --host 0.0.0.0 --port 9101
+    ports:
+      - "9101:9101"
+
+  kundli-service:
+    build: .
+    command: uvicorn mocks.kundli_service.main:app --host 0.0.0.0 --port 9102
+    ports:
+      - "9102:9102"
+
+  horoscope-service:
+    build: .
+    command: uvicorn mocks.horoscope_service.main:app --host 0.0.0.0 --port 9103
+    ports:
+      - "9103:9103"
+
+  panchang-service:
+    build: .
+    command: uvicorn mocks.panchang_service.main:app --host 0.0.0.0 --port 9104
+    ports:
+      - "9104:9104"
+
+  engine:
+    build: .
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      USER_SERVICE_URL: http://user-service:9101/users
+      KUNDLI_SERVICE_URL: http://kundli-service:9102/kundli
+      HOROSCOPE_SERVICE_URL: http://horoscope-service:9103/horoscope
+      PANCHANG_SERVICE_URL: http://panchang-service:9104/panchang
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    depends_on:
+      - user-service
+      - kundli-service
+      - horoscope-service
+      - panchang-service

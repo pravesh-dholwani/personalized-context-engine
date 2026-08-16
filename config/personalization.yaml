@@ -1,0 +1,200 @@
+# Both language and tone can come from two places: the LLM's detection of
+# the question text itself, or the user's stored profile. These strategies
+# decide which one wins when both are available:
+#   question_first -> prefer what the LLM detected from the question,
+#                     falling back to the profile only if the LLM call
+#                     failed (see analyzer.py) or the profile itself has
+#                     no value under profile_first's own fallback.
+#   profile_first   -> trust an explicit profile value first, falling back
+#                      to the question's detection only when the profile
+#                      has nothing set.
+# Either way, if neither source has anything, English / Neutral is used.
+responseRules:
+  languageStrategy: "question_first"
+  toneStrategy: "profile_first"
+
+# Maps the user profile's language code to the display name used in
+# prompts and in the /debug/personalization response (e.g. "en" ->
+# "English"). Unknown/missing codes fall back to "default".
+languageMap:
+  en: "English"
+  hi: "Hindi"
+  ta: "Tamil"
+  te: "Telugu"
+  bn: "Bengali"
+  mr: "Marathi"
+  gu: "Gujarati"
+  default: "English"
+
+# Maps internal dot-path context keys to the human-readable labels shown
+# in `sourcesUsed` and `/debug/personalization`. This is the single
+# place that translates "Kundli.houses.10" into "10th House" - the
+# resolver and prompt builder never hardcode display strings.
+contextLabels:
+  "User": "User Profile"
+  "Horoscope": "Full Horoscope"
+  "Horoscope.career": "Career Horoscope"
+  "Horoscope.relationship": "Relationship Horoscope"
+  "Horoscope.health": "Health Horoscope"
+  "Horoscope.finance": "Finance Horoscope"
+  "Kundli.houses.10": "10th House"
+  "Kundli.houses.7": "7th House"
+  "Kundli.houses.6": "6th House"
+  "Kundli.currentDasha": "Current Dasha"
+  "Kundli.moonSign": "Moon Sign"
+  "Panchang": "Today's Panchang"
+
+# showFollowUpQuestion is decided solely by subscription tier - it is
+# NOT overridden per-intent. Every intent's context rules apply
+# uniformly to free and premium users; only the follow-up prompt and
+# max word count differ by tier.
+subscriptionRules:
+  free:
+    allowSecondaryContext: false
+    maxOutputWords: 100
+    showFollowUpQuestion: false
+
+  premium:
+    allowSecondaryContext: true
+    maxOutputWords: 200
+    showFollowUpQuestion: true
+
+intents:
+
+  career:
+    keywords:
+      - job
+      - career
+      - promotion
+      - work
+      - salary
+      - hired
+      - switch
+      - changing job
+
+    primaryContext:
+      - Kundli.houses.10
+      - Horoscope.career
+
+    secondaryContext:
+      - Kundli.currentDasha
+      - Panchang
+
+    degradedFallbackContext:
+      - Horoscope.career
+      - Panchang
+
+    exclude:
+      - Horoscope.relationship
+      - Horoscope.health
+      - Kundli.houses.7
+
+  relationship:
+    keywords:
+      - relationship
+      - partner
+      - marriage
+      - love
+      - breakup
+      - spouse
+
+    primaryContext:
+      - Kundli.houses.7
+      - Horoscope.relationship
+
+    secondaryContext:
+      - Kundli.moonSign
+      - Kundli.currentDasha
+
+    degradedFallbackContext:
+      - Horoscope.relationship
+      - Kundli.moonSign
+
+    exclude:
+      - Horoscope.career
+      - Horoscope.finance
+      - Kundli.houses.10
+
+  health:
+    keywords:
+      - health
+      - sleep
+      - energy
+      - wellness
+      - illness
+      - fitness
+
+    primaryContext:
+      - Kundli.houses.6
+      - Horoscope.health
+
+    secondaryContext:
+      - Kundli.moonSign
+      - Panchang
+
+    degradedFallbackContext:
+      - Horoscope.health
+      - Panchang
+
+    exclude:
+      - Horoscope.relationship
+      - Horoscope.career
+
+  finance:
+    keywords:
+      - finance
+      - money
+      - investment
+      - wealth
+      - income
+      - savings
+      - financial
+
+    primaryContext:
+      - Horoscope.finance
+
+    secondaryContext:
+      - Kundli.currentDasha
+      - Kundli.houses.10
+
+    degradedFallbackContext:
+      - Horoscope.finance
+      - Kundli.currentDasha
+
+    exclude:
+      - Horoscope.relationship
+      - Horoscope.health
+
+  general:
+    keywords:
+      - guidance
+      - today
+      - this week
+      - summarize
+      - overall
+      - general
+
+    primaryContext:
+      - User
+      - Horoscope
+
+    secondaryContext:
+      - Kundli.currentDasha
+      - Panchang
+
+    degradedFallbackContext:
+      - Horoscope
+      - User
+
+    exclude: []
+
+# Confidence resolution - evaluated against the detected intent's own
+# primaryContext/secondaryContext lists:
+#   HIGH   -> every configured source (primary + secondary) fetched OK.
+#   MEDIUM -> only a secondaryContext source failed; all primaryContext
+#             sources for this intent fetched OK.
+#   LOW    -> at least one primaryContext source for this intent failed
+#             to fetch.
+degradationRules:
+  confidenceOnSecondaryFailure: "MEDIUM"
+  confidenceOnPrimaryFailure: "LOW"
