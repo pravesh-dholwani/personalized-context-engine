@@ -1,0 +1,190 @@
+{
+  "info": {
+    "_postman_id": "2ac9b1a5-29a0-4fee-85c3-86fec9c91e82",
+    "name": "Personalization Layer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28131128"
+  },
+  "item": [
+    {
+      "name": "Debug Personalization",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userId\": \"user_101\",\n    \"question\": \"meri shaadi kab hogi\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/debug/personalization",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "debug",
+            "personalization"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Debug Personalization example 1",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": \"user_101\",\n    \"question\": \"meri shaadi kab hogi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/debug/personalization",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "debug",
+                "personalization"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "date",
+              "value": "Sun, 16 Aug 2026 06:18:24 GMT"
+            },
+            {
+              "key": "server",
+              "value": "uvicorn"
+            },
+            {
+              "key": "content-length",
+              "value": "264"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"intent\": \"relationship\",\n  \"intentSource\": \"llm\",\n  \"language\": \"Hindi\",\n  \"tone\": \"Motivational\",\n  \"selectedContext\": [\n    \"7th House\",\n    \"Relationship Horoscope\",\n    \"Moon Sign\",\n    \"Current Dasha\"\n  ],\n  \"excludedContext\": [\n    \"Career Horoscope\",\n    \"Finance Horoscope\",\n    \"10th House\"\n  ],\n  \"confidence\": \"HIGH\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Personalize",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userId\": \"user_101\",\n    \"question\": \"meri health ka kya hoga?\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/personalize",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "personalize"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Personalize Example 1",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": \"user_101\",\n    \"question\": \"meri health ka kya hoga?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/personalize",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "personalize"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "date",
+              "value": "Sun, 16 Aug 2026 06:18:37 GMT"
+            },
+            {
+              "key": "server",
+              "value": "uvicorn"
+            },
+            {
+              "key": "content-length",
+              "value": "2087"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"answer\": \"आपकी स्वास्थ्य स्थिति में कुछ उतार-चढ़ाव हो सकते हैं, लेकिन चिंता न करें। आपकी छठी भाव में गुरु की स्थिति कुछ औसत है, जो यह संकेत करती है कि आपको अपने स्वास्थ्य पर ध्यान देने की आवश्यकता है। खासकर सही नींद को प्राथमिकता दें। नींद सही होगी तो आपकी मानसिक और शारीरिक सेहत बेहतर होगी।\\n\\nआज का दिन आपके लिए शुभ है, क्योंकि आज शुक्ल पंचमी और रोहिणी नक्षत्र है, जो आपके स्वास्थ्य में सुधार लाने में मदद कर सकता है। यह समय है खुद को रिचार्ज करने का और अपनी सेहत पर ध्यान देने का। योग और ध्यान को अपने दिनचर्या में शामिल करें, जिससे आप मानसिक शांति और शारीरिक ताकत प्राप्त कर सकें।\\n\\nअपने स्वास्थ्य को लेकर सकारात्मक रहें और अच्छे खाने की आदतें अपनाएं। अपने शरीर की सुनें और खुद को समय दें।\",\n  \"confidence\": \"HIGH\",\n  \"sourcesUsed\": [\n    \"6th House\",\n    \"Health Horoscope\",\n    \"Moon Sign\",\n    \"Today's Panchang\"\n  ],\n  \"followUpQuestion\": \"क्या आप अपनी दिनचर्या में कोई विशेष बदलाव करने की योजना बना रहे हैं?\",\n  \"failedServices\": []\n}"
+        }
+      ]
+    }
+  ]
+}
